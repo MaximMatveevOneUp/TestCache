@@ -103,7 +103,7 @@ jobs:
         uses: khj809/github-action-cache-local-fs/restore@v1
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
-          path: TestCache/Library
+          path: /Users/maxim.m/Repositories/TestCache/TestCache/Library
           key: android-${{ env.CI_REF_NAME_SLUG }}
           restore-keys: |
             android-develop
@@ -113,5 +113,5 @@ jobs:
         uses: khj809/github-action-cache-local-fs/save@v1
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
-          path: TestCache/Library
+          path: /Users/maxim.m/Repositories/TestCache/TestCache/Library
           key: android-${{ env.CI_REF_NAME_SLUG }}
