@@ -40,7 +40,7 @@ on:
       saveCache:
         description: 'Save Cache'
         required: false
-        default: false
+        default: true
         type: boolean
       androidAppBundle:
         description: 'Android AppBundle'
@@ -102,7 +102,6 @@ jobs:
 
       - name: Restore Unity Library from Cache
         uses: khj809/github-action-cache-local-fs/restore@v1
-        if: env.restoreCache == 'true'
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
           path: TestCache/Library
@@ -113,8 +112,6 @@ jobs:
 
       - name: Save Unity Library to Cache
         uses: khj809/github-action-cache-local-fs/save@v1
-        ## https://oneupgamesgroup.slack.com/archives/C024NHCRVS9/p1681727489220929
-        if: env.saveCache == 'true'
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
           path: TestCache/Library
