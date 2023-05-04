@@ -63,7 +63,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: [ self-hosted,Linux,unity ]
+    runs-on: self-hosted
     steps:
       - name: GitHub Environment Variables Action
         uses: FranzDiebold/github-env-vars-action@v2.7.0
