@@ -111,6 +111,7 @@ jobs:
 
       - name: Save Unity Library to Cache
         uses: khj809/github-action-cache-local-fs/save@v1
+        if: env.saveCache == 'true'
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
           path: /Users/maxim.m/Repositories/TestCache/Library
