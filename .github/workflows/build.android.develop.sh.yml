@@ -80,7 +80,7 @@ jobs:
           CACHE_RESTORE=${{ github.event.inputs.restoreCache }}
           echo "restoreCache=${CACHE_RESTORE:-"false"}" >> $GITHUB_ENV
           CACHE_SAVE=${{ github.event.inputs.saveCache }}
-          echo "saveCache=${CACHE_SAVE:-"true"}" >> $GITHUB_ENV
+          echo "saveCache=${CACHE_SAVE:-"false"}" >> $GITHUB_ENV
           STAND=${{ github.event.inputs.standName }}
           echo "standName=${STAND:-"CST1"}" >> $GITHUB_ENV
           EXPORT_PROJECT=${{ github.event.inputs.exportProject }}
