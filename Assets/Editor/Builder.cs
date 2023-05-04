@@ -8,6 +8,7 @@ namespace Code.GGClient.Build.Editor
         public static void ApplySettings()
         {
             Debug.Log("ApplySettings invoked");
+            Debug.Log("ApplySettings invoked");
         }
 
         // ReSharper disable once UnusedMember.Global
