@@ -87,7 +87,7 @@ jobs:
           echo "exportProject=${EXPORT_PROJECT:-"false"}" >> $GITHUB_ENV
           APP_BUNDLE=${{ github.event.inputs.androidAppBundle }}
           echo "androidAppBundle=${APP_BUNDLE:-"false"}"  >> $GITHUB_ENV
-          echo "CACHE_FOLDER_PATH=/Users/maxim.m/Runner/Cache"  >> $GITHUB_ENV
+          echo "CACHE_FOLDER_PATH=/Users/maxim.m/Runner/Cache/"  >> $GITHUB_ENV
           BUILD_PRESET=${{ github.event.inputs.buildSettingsPreset }}
           echo "buildSettingsPreset=${BUILD_PRESET:-"Develop"}" >> $GITHUB_ENV          
 
