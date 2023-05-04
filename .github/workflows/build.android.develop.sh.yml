@@ -1,0 +1,160 @@
+name: Build Android Develop (Self-Hosted)
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      standName:
+        description: 'Stand by default'
+        required: true
+        default: 'CST1'
+        type: choice
+        options:
+          - RELEASE
+          - STAGE
+          - SST1
+          - CST1
+          - QST1
+          - PST1
+      developmentBuild:
+        description: 'Development Build'
+        required: true
+        default: true
+        type: boolean
+      allowDebugging:
+        description: 'Allow Debugging'
+        required: true
+        default: false
+        type: boolean
+      buildWithDeepProfilingSupport:
+        description: 'Deep Profiling Support'
+        required: true
+        default: false
+        type: boolean
+      restoreCache:
+        description: 'Restore Cache'
+        required: false
+        default: true
+        type: boolean
+      saveCache:
+        description: 'Save Cache'
+        required: false
+        default: false
+        type: boolean
+      androidAppBundle:
+        description: 'Android AppBundle'
+        required: true
+        default: false
+        type: boolean
+      exportProject:
+        description: 'Export Android Studio Project'
+        required: true
+        default: false
+        type: boolean
+      buildSettingsPreset:
+        type: choice
+        description: 'BuildSettings preset name'      
+        options: 
+        - Develop
+        - Release
+        default: Develop       
+
+jobs:
+  build:
+    name: Build
+    runs-on: [ self-hosted,Linux,unity ]
+    steps:
+      - name: Generate build number
+        id: buildnumber
+        uses: onyxmueller/build-tag-number@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: client
+
+      - name: GitHub Environment Variables Action
+        uses: FranzDiebold/github-env-vars-action@v2.7.0
+
+      - name: Set values
+        id: values
+        run: |
+          DEV_BUILD=${{ github.event.inputs.developmentBuild }}
+          echo "developmentBuild=${DEV_BUILD:-"true"}" >> $GITHUB_ENV
+          ALLOW_DEBUGGING=${{ github.event.inputs.allowDebugging }}
+          echo "allowDebugging=${ALLOW_DEBUGGING:-"false"}" >> $GITHUB_ENV
+          DPS=${{ github.event.inputs.buildWithDeepProfilingSupport }}
+          echo "buildWithDeepProfilingSupport=${DPS:-"false"}" >> $GITHUB_ENV
+          CACHE_RESTORE=${{ github.event.inputs.restoreCache }}
+          echo "restoreCache=${CACHE_RESTORE:-"false"}" >> $GITHUB_ENV
+          CACHE_SAVE=${{ github.event.inputs.saveCache }}
+          echo "saveCache=${CACHE_SAVE:-"true"}" >> $GITHUB_ENV
+          STAND=${{ github.event.inputs.standName }}
+          echo "standName=${STAND:-"CST1"}" >> $GITHUB_ENV
+          EXPORT_PROJECT=${{ github.event.inputs.exportProject }}
+          echo "exportProject=${EXPORT_PROJECT:-"false"}" >> $GITHUB_ENV
+          APP_BUNDLE=${{ github.event.inputs.androidAppBundle }}
+          echo "androidAppBundle=${APP_BUNDLE:-"false"}"  >> $GITHUB_ENV
+          echo "CACHE_FOLDER_PATH=$SHARED_BUILD_FOLDER_PATH/cache/android/"  >> $GITHUB_ENV
+          BUILD_PRESET=${{ github.event.inputs.buildSettingsPreset }}
+          echo "buildSettingsPreset=${BUILD_PRESET:-"Develop"}" >> $GITHUB_ENV          
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Restore Unity Library from Cache
+        uses: khj809/github-action-cache-local-fs/restore@v1
+        ## https://oneupgamesgroup.slack.com/archives/C024NHCRVS9/p1681727489220929
+        if: env.restoreCache == 'true'
+        with:
+          cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
+          path: GGClient/Library
+          key: android-${{ env.CI_REF_NAME_SLUG }}
+          restore-keys: |
+            android-develop
+            android-
+
+      - name: Setup
+        uses: one-up-games/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          acceleratorAddress: "10.4.111.249"
+        with:
+          versioning: None
+          projectPath: GGClient
+          targetPlatform: Android
+          customParameters: -EnableCacheServer -cacheServerEndpoint ${{ env.acceleratorAddress }} -cacheServerEnableDownload true -cacheServerEnableUpload false -buildSettingsPreset ${{ env.buildSettingsPreset }}
+          #.apk file extension will be added automatically  
+          buildName: "GG-Android-${{ github.run_id }}"
+          buildMethod: Code.GGClient.Build.Editor.Builder.ApplySettings
+          allowDirtyBuild: true
+
+      - name: Build Android
+        uses: one-up-games/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          acceleratorAddress: "10.4.111.249"
+        with:
+          versioning: None
+          projectPath: GGClient
+          targetPlatform: Android
+          androidAppBundle: ${{ env.androidAppBundle }}
+          customParameters: -exportProject ${{ env.exportProject }} -development ${{ env.developmentBuild }} -allowDebugging ${{ env.allowDebugging }} -buildWithDeepProfilingSupport ${{ env.buildWithDeepProfilingSupport }} -EnableCacheServer -cacheServerEndpoint ${{ env.acceleratorAddress }} -cacheServerEnableDownload true -cacheServerEnableUpload false -buildNumber ${{ steps.buildnumber.outputs.build_number }} -standName ${{ env.standName }}
+          #.apk file extension will be added automatically  
+          buildName: "GG-Android-${{ github.run_id }}"
+          buildMethod: Code.GGClient.Build.Editor.Builder.Build
+          allowDirtyBuild: true
+
+      - name: Save Unity Library to Cache
+        uses: khj809/github-action-cache-local-fs/save@v1
+        ## https://oneupgamesgroup.slack.com/archives/C024NHCRVS9/p1681727489220929
+        if: env.saveCache == 'true'
+        with:
+          cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
+          path: GGClient/Library
+          key: android-${{ env.CI_REF_NAME_SLUG }}
