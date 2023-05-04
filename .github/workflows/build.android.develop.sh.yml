@@ -102,6 +102,7 @@ jobs:
       - name: Restore Unity Library from Cache
         uses: khj809/github-action-cache-local-fs/restore@v1
         with:
+          cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
           path: /Users/maxim.m/Repositories/TestCache/Library
           key: android-${{ env.CI_REF_NAME_SLUG }}
           restore-keys: |
@@ -111,5 +112,6 @@ jobs:
       - name: Save Unity Library to Cache
         uses: khj809/github-action-cache-local-fs/save@v1
         with:
+          cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
           path: /Users/maxim.m/Repositories/TestCache/Library
           key: android-${{ env.CI_REF_NAME_SLUG }}
