@@ -65,13 +65,6 @@ jobs:
     name: Build
     runs-on: [ self-hosted,Linux,unity ]
     steps:
-      - name: Generate build number
-        id: buildnumber
-        uses: onyxmueller/build-tag-number@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          prefix: client
-
       - name: GitHub Environment Variables Action
         uses: FranzDiebold/github-env-vars-action@v2.7.0
 
@@ -109,46 +102,14 @@ jobs:
 
       - name: Restore Unity Library from Cache
         uses: khj809/github-action-cache-local-fs/restore@v1
-        ## https://oneupgamesgroup.slack.com/archives/C024NHCRVS9/p1681727489220929
         if: env.restoreCache == 'true'
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
-          path: GGClient/Library
+          path: TestCache/Library
           key: android-${{ env.CI_REF_NAME_SLUG }}
           restore-keys: |
             android-develop
             android-
-
-      - name: Setup
-        uses: one-up-games/unity-builder@v2
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          acceleratorAddress: "10.4.111.249"
-        with:
-          versioning: None
-          projectPath: GGClient
-          targetPlatform: Android
-          customParameters: -EnableCacheServer -cacheServerEndpoint ${{ env.acceleratorAddress }} -cacheServerEnableDownload true -cacheServerEnableUpload false -buildSettingsPreset ${{ env.buildSettingsPreset }}
-          #.apk file extension will be added automatically  
-          buildName: "GG-Android-${{ github.run_id }}"
-          buildMethod: Code.GGClient.Build.Editor.Builder.ApplySettings
-          allowDirtyBuild: true
-
-      - name: Build Android
-        uses: one-up-games/unity-builder@v2
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          acceleratorAddress: "10.4.111.249"
-        with:
-          versioning: None
-          projectPath: GGClient
-          targetPlatform: Android
-          androidAppBundle: ${{ env.androidAppBundle }}
-          customParameters: -exportProject ${{ env.exportProject }} -development ${{ env.developmentBuild }} -allowDebugging ${{ env.allowDebugging }} -buildWithDeepProfilingSupport ${{ env.buildWithDeepProfilingSupport }} -EnableCacheServer -cacheServerEndpoint ${{ env.acceleratorAddress }} -cacheServerEnableDownload true -cacheServerEnableUpload false -buildNumber ${{ steps.buildnumber.outputs.build_number }} -standName ${{ env.standName }}
-          #.apk file extension will be added automatically  
-          buildName: "GG-Android-${{ github.run_id }}"
-          buildMethod: Code.GGClient.Build.Editor.Builder.Build
-          allowDirtyBuild: true
 
       - name: Save Unity Library to Cache
         uses: khj809/github-action-cache-local-fs/save@v1
@@ -156,5 +117,5 @@ jobs:
         if: env.saveCache == 'true'
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
-          path: GGClient/Library
+          path: TestCache/Library
           key: android-${{ env.CI_REF_NAME_SLUG }}
