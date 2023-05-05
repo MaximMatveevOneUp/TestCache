@@ -100,7 +100,7 @@ jobs:
           fetch-depth: 0
 
       - name: Restore Unity Library from Cache
-        uses: MaximMatveevOneUp/github-action-cache-local-fs/restore@vmain
+        uses: MaximMatveevOneUp/github-action-cache-local-fs/restore@main
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
           path: /Users/maxim.m/Repositories/TestCache/Library
