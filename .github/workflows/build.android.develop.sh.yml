@@ -100,7 +100,7 @@ jobs:
           fetch-depth: 0
 
       - name: Restore Unity Library from Cache
-        uses: MaximMatveevOneUp/github-action-cache-local-fs/restore@v1
+        uses: MaximMatveevOneUp/github-action-cache-local-fs/restore@vmain
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
           path: /Users/maxim.m/Repositories/TestCache/Library
@@ -110,7 +110,7 @@ jobs:
             android-
 
       - name: Save Unity Library to Cache
-        uses: MaximMatveevOneUp/github-action-cache-local-fs/save@v1
+        uses: MaximMatveevOneUp/github-action-cache-local-fs/save@main
         if: env.saveCache == 'true'
         with:
           cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
