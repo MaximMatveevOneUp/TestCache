@@ -1,0 +1,39 @@
+name: Upload APK to Firebase App Distribution
+on:
+  workflow_dispatch:
+    inputs:
+      runId:
+        description: 'RunId'
+        required: true
+        default: ''
+      testersGroups:
+        description: 'Testers Groups'
+        required: true
+        default: 'oneup-games'
+
+jobs:
+  downloadUploadAndRun:
+    name: Download APK & Upload Firebase App Distribution
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: one-up-games/action-download-artifact@master
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          run_id: ${{ github.event.inputs.runId }}
+          workflow_conclusion: 'success'
+          name: 'APK'
+          search_artifacts: true
+
+      - name: "Get APK path"
+        run: |
+          apkFileName=$(find . -type f -name '*.apk')
+          echo "APK_FILE_NAME="$apkFileName"" >> $GITHUB_ENV
+
+      - name: Firebase App Distribution
+        uses: MaximMatveevOneUp/docker_action@main
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
+          groups: ${{ github.event.inputs.testersGroups }}
+          file: ${{ env.APK_FILE_NAME }}
