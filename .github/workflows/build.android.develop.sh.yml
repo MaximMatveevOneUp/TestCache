@@ -68,7 +68,7 @@ jobs:
       - name: Generate list using Markdown
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "branch: ${{ env.CI_REF_NAME }}" >> $GITHUB_STEP_SUMMARY      
+          echo "branch: ${{ env.CI_REF_NAME_SLUG }}" >> $GITHUB_STEP_SUMMARY      
           echo "developmentBuild: ${{ github.event.inputs.developmentBuild }}" >> $GITHUB_STEP_SUMMARY
           echo "allowDebugging: ${{ github.event.inputs.allowDebugging }}" >> $GITHUB_STEP_SUMMARY          
           
