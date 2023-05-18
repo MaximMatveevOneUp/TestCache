@@ -1,0 +1,66 @@
+name: Deploy for preview
+
+on: 
+  workflow_dispatch:
+    inputs:
+      bucket:
+        description: 'bucket name'
+        required: true
+        default: 'gg-dev-eu-north-1-clientbuilld-artefacts'
+        type: choice
+        options:
+          - gg-dev-eu-north-1-clientbuilld-artefacts
+jobs:
+  runscript:
+    name: Example
+    runs-on: ubuntu-latest
+    env:
+      BuildFile: GG-Android-${{ github.run_id }}.apk
+      BuildUploadPath: ${{ github.event.inputs.bucket }}/${{ github.run_id }}/GG-Android-${{ github.run_id }}.apk
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Call a Bash Script
+        run:  bash ${GITHUB_WORKSPACE}/.github/scripts/aws_upload.sh "build/Android/GG-Android-${{ github.run_id }}.apk" s3://$BuildUploadPath
+
+      - name: Generate QR Code
+        id: qrcode
+        uses: hammadj/qr-code-generator@master
+        with:
+          # Example using text outputted from another step action
+          content: "https://s3.amazonaws.com/$BuildUploadPath"
+
+      - uses: snow-actions/qrcode@v1.0.0
+        with:
+          text: https://s3.amazonaws.com/$BuildUploadPath
+          path: qrcode.png
+
+      - name: You can upload it to artifact.
+        uses: actions/upload-artifact@v1
+        with:
+          name: qrcode
+          path: qrcode.png
+
+      - name: Gen dummy page
+        run: |
+          mkdir public
+          cat > public/index.html <<EOL
+          <!doctype html>
+          <html>
+            <head>
+              <title>GitHub Pages deployed!</title>
+            </head>
+            <body>
+              <p>GitHub Pages with <strong>${{ github.sha }}</strong> commit ID has been deployed through <a href="https://github.com/marketplace/actions/github-pages">GitHub Pages action</a> successfully.</p>
+            </body>
+          </html>
+          EOL
+
+      
+      
+      - name: Generate summary
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY 
+          echo "BuildFile: https://s3.amazonaws.com/$BuildUploadPath" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.qrcode.output.text }}" >> $GITHUB_STEP_SUMMARY 
+          echo "test" >> $GITHUB_STEP_SUMMARY 
