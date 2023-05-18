@@ -1,0 +1,26 @@
+name: Deploy Appcenter
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  runscript:
+    name: Example
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: upload artefact to App Center
+        uses: wzieba/AppCenter-Github-Action@v1
+        with:
+          appName: wzieba/Sample-App
+          token: ${{secrets.APP_CENTER_TOKEN}}
+          group: Testers
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
+          notifyTesters: true
+          debug: false
+
+      - name: Generate summary
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY 
+          echo "test" >> $GITHUB_STEP_SUMMARY 
