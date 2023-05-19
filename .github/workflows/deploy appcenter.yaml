@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "Scan this QR code to download the release" >> $GITHUB_STEP_SUMMARY 
-          echo "<a href="link address"><img src="https://maximmatveevoneup.github.io/TestCache/${{ github.run_id }}.png"></a>" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href="https://appcenter.ms/orgs/OneUp-Games/apps/GG/"><img src="https://maximmatveevoneup.github.io/TestCache/${{ github.run_id }}.png"></a>" >> $GITHUB_STEP_SUMMARY 
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "<a href="https://appcenter.ms/orgs/OneUp-Games/apps/GG/">Download url</a>" >> $GITHUB_STEP_SUMMARY 
           echo "" >> $GITHUB_STEP_SUMMARY 
