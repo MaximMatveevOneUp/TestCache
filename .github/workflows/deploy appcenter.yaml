@@ -2,25 +2,33 @@ name: Deploy Appcenter
 
 on: 
   workflow_dispatch:
-
+    inputs:
+      group:
+        description: 'Group'
+        required: true
+        default: 'gg_team'
+        type: choice
+        options:
+          - gg_team
 jobs:
   runscript:
-    name: Example
+    name: Upload to AppCenter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
       - name: upload artefact to App Center
-        uses: wzieba/AppCenter-Github-Action@v1
+        id: upload_appcenter
+        uses: MaximMatveevOneUp/AppCenter-Github-Action@v1
         with:
-          appName: wzieba/Sample-App
-          token: ${{secrets.APP_CENTER_TOKEN}}
-          group: Testers
-          file: app/build/outputs/apk/release/app-release-unsigned.apk
+          appName: OneUp-Games/GG
+          token: ${{secrets.APP_CENTER_TOKEN_ANDROID}}
+          group: gg_team
+          file: /Users/maxim.m/Builds/Client/gg1.apk
           notifyTesters: true
           debug: false
 
       - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
-          echo "test" >> $GITHUB_STEP_SUMMARY 
+          echo "https://install.appcenter.ms/orgs/OneUp-Games/apps/GG/releases/${{ steps.upload_appcenter.outputs.releaseId }}"" >> $GITHUB_STEP_SUMMARY 
