@@ -20,12 +20,12 @@ jobs:
       - uses: snow-actions/qrcode@v1.0.0
         with:
           text: https://appcenter.ms/orgs/OneUp-Games/apps/GG/
-          path: ${GITHUB_WORKSPACE}/.github/qr_codes/${{ github.run_id }}.png
+          path: .github/qr_codes/${{ github.run_id }}.png
 
       - name: Deploy to pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: ${GITHUB_WORKSPACE}/.github/qr_codes
+          folder: .github/qr_codes
 
       - name: Generate summary
         run: |
