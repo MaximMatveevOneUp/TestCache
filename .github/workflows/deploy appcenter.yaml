@@ -17,18 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: upload artefact to App Center
-        id: upload_appcenter
-        uses: MaximMatveevOneUp/AppCenter-Github-Action@master
-        with:
-          appName: OneUp-Games/GG
-          token: ${{secrets.APP_CENTER_TOKEN_ANDROID}}
-          group: ${{ github.event.inputs.appcenterGroup }}
-          file: /Users/maxim.m/Builds/Client/gg1.apk
-          notifyTesters: true
-          debug: false
 
       - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
-          echo "https://install.appcenter.ms/orgs/OneUp-Games/apps/GG/releases/${{ steps.upload_appcenter.outputs.releaseId }}"" >> $GITHUB_STEP_SUMMARY 
+          echo "<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>" >> $GITHUB_STEP_SUMMARY 
