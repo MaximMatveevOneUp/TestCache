@@ -37,6 +37,6 @@ jobs:
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "<table><tr><td>Foo</td></tr></table>" >> $GITHUB_STEP_SUMMARY 
-          echo "<a href="link address"><img src="${{ github.run_id }}qrcode.png"></a>" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href="link address"><img src="https://maximmatveevoneup.github.io/TestCache/${{ github.run_id }}.png"></a>" >> $GITHUB_STEP_SUMMARY 
 
           
