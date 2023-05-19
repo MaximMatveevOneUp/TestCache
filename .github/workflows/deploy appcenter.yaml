@@ -23,7 +23,7 @@ jobs:
           path: .github/qr_codes/${{ github.run_id }}.png
 
       - name: Deploy to pages
-        uses: MaximMatveevOneUp/github-pages-deploy-action@dev
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: pages
           folder: .github/qr_codes
