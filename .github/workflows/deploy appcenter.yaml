@@ -21,8 +21,4 @@ jobs:
       - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
-          echo "<table>
-    <tr>
-        <td>Foo</td>
-    </tr>
-</table>" >> $GITHUB_STEP_SUMMARY 
+          echo "<table><tr><td>Foo</td></tr></table>" >> $GITHUB_STEP_SUMMARY 
