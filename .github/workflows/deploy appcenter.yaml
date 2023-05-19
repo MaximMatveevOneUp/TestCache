@@ -27,6 +27,7 @@ jobs:
         with:
           branch: pages
           folder: .github/qr_codes
+          commit-message: Qr code for ${{ github.run_id }} 
           clean: false
 
       - name: Generate summary
