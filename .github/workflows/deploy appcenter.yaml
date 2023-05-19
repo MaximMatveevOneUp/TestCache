@@ -20,22 +20,12 @@ jobs:
       - uses: snow-actions/qrcode@v1.0.0
         with:
           text: https://appcenter.ms/orgs/OneUp-Games/apps/GG/
-          path: ${{ github.run_id }}qrcode.png
-
-      - name: You can upload it to artifact.
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ github.run_id }}
           path: ${{ github.run_id }}/qrcode.png
 
-      - name: Download artifact
-        uses: one-up-games/action-download-artifact@master
+      - name: Deploy to pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          run_id: ${{ github.run_id }}
-          workflow_conclusion: 'success'
-          name: ${{ github.run_id }}
-          search_artifacts: true
+          folder: ${{ github.run_id }}
 
       - name: Generate summary
         run: |
