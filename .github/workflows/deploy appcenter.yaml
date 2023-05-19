@@ -20,17 +20,18 @@ jobs:
       - uses: snow-actions/qrcode@v1.0.0
         with:
           text: https://appcenter.ms/orgs/OneUp-Games/apps/GG/
-          path: pages/${{ github.run_id }}.png
+          path: qr_codes/${{ github.run_id }}.png
 
       - name: Deploy to pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: pages
+          folder: qr_codes
 
       - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "<table><tr><td>Foo</td></tr></table>" >> $GITHUB_STEP_SUMMARY 
           echo "<a href="link address"><img src="https://maximmatveevoneup.github.io/TestCache/${{ github.run_id }}.png"></a>" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href="Download url">https://appcenter.ms/orgs/OneUp-Games/apps/GG/</a>" >> $GITHUB_STEP_SUMMARY 
 
           
