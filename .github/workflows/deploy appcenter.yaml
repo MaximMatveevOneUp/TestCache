@@ -45,6 +45,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "<a href="https://appcenter.ms/orgs/OneUp-Games/apps/GG/">Download url</a>" >> $GITHUB_STEP_SUMMARY 
           echo "" >> $GITHUB_STEP_SUMMARY 
+          echo "<table><tr><td>${{ steps.qrcode.output.text }}</td></tr></table>" >> $GITHUB_STEP_SUMMARY 
+
           echo "${{ steps.qrcode.output.data }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.qrcode.output.text }}" >> $GITHUB_STEP_SUMMARY
 
           
