@@ -25,8 +25,8 @@ jobs:
       - name: You can upload it to artifact.
         uses: actions/upload-artifact@v1
         with:
-          name: ${{ github.run_id }}qrcode
-          path: ${{ github.run_id }}qrcode.png
+          name: ${{ github.run_id }}
+          path: ${{ github.run_id }}/qrcode.png
 
       - name: Download artifact
         uses: one-up-games/action-download-artifact@master
@@ -34,9 +34,9 @@ jobs:
           github_token: ${{secrets.GITHUB_TOKEN}}
           run_id: ${{ github.run_id }}
           workflow_conclusion: 'success'
-          name: ${{ github.run_id }}qrcode
+          name: ${{ github.run_id }}
           search_artifacts: true
-          
+
       - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
