@@ -25,8 +25,8 @@ jobs:
       - name: You can upload it to artifact.
         uses: actions/upload-artifact@v1
         with:
-          name: ${{ github.run_id }}qrcode
-          path: ${{ github.run_id }}qrcode.png
+          name: ${{ github.run_id }}
+          path: ${{ github.run_id }}/qrcode.png
 
       - name: Deploy to pages
         uses: JamesIves/github-pages-deploy-action@v4
