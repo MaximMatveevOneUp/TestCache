@@ -25,6 +25,7 @@ jobs:
       - name: Deploy to pages
         uses: MaximMatveevOneUp/github-pages-deploy-action@dev
         with:
+          branch: pages
           folder: .github/qr_codes
 
       - name: Generate summary
