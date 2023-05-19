@@ -19,19 +19,28 @@ jobs:
 
       - uses: snow-actions/qrcode@v1.0.0
         with:
-          text: https://s3.amazonaws.com/$BuildUploadPath
-          path: qrcode.png
+          text: https://appcenter.ms/orgs/OneUp-Games/apps/GG/
+          path: ${{ github.run_id }}qrcode.png
 
       - name: You can upload it to artifact.
         uses: actions/upload-artifact@v1
         with:
-          name: qrcode
-          path: qrcode.png
+          name: ${{ github.run_id }}qrcode
+          path: ${{ github.run_id }}qrcode.png
 
+      - name: Download artifact
+        uses: one-up-games/action-download-artifact@master
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          run_id: ${{ github.run_id }}
+          workflow_conclusion: 'success'
+          name: ${{ github.run_id }}qrcode
+          search_artifacts: true
+          
       - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "<table><tr><td>Foo</td></tr></table>" >> $GITHUB_STEP_SUMMARY 
-          echo "<a href="link address"><img src="qrcode.png"></a>" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href="link address"><img src="${{ github.run_id }}qrcode.png"></a>" >> $GITHUB_STEP_SUMMARY 
 
           
