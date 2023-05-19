@@ -22,6 +22,12 @@ jobs:
           text: https://appcenter.ms/orgs/OneUp-Games/apps/GG/
           path: ${{ github.run_id }}/qrcode.png
 
+      - name: You can upload it to artifact.
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ github.run_id }}qrcode
+          path: ${{ github.run_id }}qrcode.png
+
       - name: Deploy to pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
