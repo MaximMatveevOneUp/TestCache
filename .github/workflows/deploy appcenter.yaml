@@ -17,6 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Generate QR Code
+        id: qrcode
+        uses: hammadj/qr-code-generator@master
+        with:
+          # Example using text outputted from another step action
+          content: "https://appcenter.ms/orgs/OneUp-Games/apps/GG/"
+
       - uses: snow-actions/qrcode@v1.0.0
         with:
           text: https://appcenter.ms/orgs/OneUp-Games/apps/GG/
@@ -36,5 +43,7 @@ jobs:
           echo "<a href="link address"><img src="https://maximmatveevoneup.github.io/TestCache/${{ github.run_id }}.png"></a>" >> $GITHUB_STEP_SUMMARY 
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "<a href="https://appcenter.ms/orgs/OneUp-Games/apps/GG/">Download url</a>" >> $GITHUB_STEP_SUMMARY 
+          echo "" >> $GITHUB_STEP_SUMMARY 
+          echo "${{ steps.qrcode.output.data }}" >> $GITHUB_STEP_SUMMARY
 
           
