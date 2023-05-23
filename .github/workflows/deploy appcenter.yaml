@@ -39,8 +39,8 @@ jobs:
           path: ".github/qr_codes"
 
       - name: Deploy GitHub Pages site
+        id: deployment
         uses: actions/deploy-pages@v2.0.1
-
 
       - name: Generate summary
         run: |
@@ -50,9 +50,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "<a href="https://appcenter.ms/orgs/OneUp-Games/apps/GG/">Download url</a>" >> $GITHUB_STEP_SUMMARY 
           echo "" >> $GITHUB_STEP_SUMMARY 
-          echo "<table><tr><td>${{ steps.qrcode.output.text }}</td></tr></table>" >> $GITHUB_STEP_SUMMARY 
+          echo "page_url ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY 
 
-          echo "${{ steps.qrcode.output.data }}" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.qrcode.output.text }}" >> $GITHUB_STEP_SUMMARY
 
           
