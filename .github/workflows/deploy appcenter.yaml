@@ -17,25 +17,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Generate QR Code
-        id: qrcode
-        uses: hammadj/qr-code-generator@master
-        with:
-          # Example using text outputted from another step action
-          content: "https://appcenter.ms/orgs/OneUp-Games/apps/GG/"
-
       - uses: snow-actions/qrcode@v1.0.0
         with:
           text: https://appcenter.ms/orgs/OneUp-Games/apps/GG/
           path: .github/qr_codes/${{ github.run_id }}.png
 
-      - name: Deploy to pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - uses: actions/upload-artifact@v2
         with:
-          branch: pages
-          folder: .github/qr_codes
-          commit-message: Qr code for ${{ github.run_id }} 
-          clean: false
+          name: "${{ github.run_id }}.png"
+          path: ".github/qr_codes/${{ github.run_id }}.png"
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v1.0.8
+          path: ".github/qr_codes/${{ github.run_id }}.png"
 
       - name: Generate summary
         run: |
