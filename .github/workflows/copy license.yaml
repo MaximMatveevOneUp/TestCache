@@ -1,0 +1,18 @@
+name: Copy license
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: 'Path to file'
+        required: true
+        default: 'test_fule.txt'
+
+jobs:
+  copyfile:
+    name: Copy license
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy
+        uses: https://github.com/MaximMatveevOneUp/CopyLicenseFile
+        with:
+          path: ${{ github.event.inputs.path }}
