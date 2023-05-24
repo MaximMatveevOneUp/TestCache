@@ -13,6 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Copy
-        uses: MaximMatveevOneUp/CopyLicenseFile
+        uses: MaximMatveevOneUp/CopyLicenseFile@main
         with:
           path: ${{ github.event.inputs.path }}
