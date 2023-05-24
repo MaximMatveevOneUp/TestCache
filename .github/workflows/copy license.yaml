@@ -2,8 +2,12 @@ name: Copy license
 on:
   workflow_dispatch:
     inputs:
-      path:
-        description: 'Path to file'
+      source_path:
+        description: 'Path to source file'
+        required: true
+        default: 'test_fule.txt'
+      dest_path:
+        description: 'Path to dest file'
         required: true
         default: 'test_fule.txt'
 
@@ -12,7 +16,10 @@ jobs:
     name: Copy license
     runs-on: ubuntu-latest
     steps:
-      - name: Copy
-        uses: MaximMatveevOneUp/CopyLicenseFile@main
-        with:
-          path: ${{ github.event.inputs.path }}
+    - uses: actions/checkout@master
+
+    - name: Copy file
+      uses: canastro/copy-action@0.0.2
+      with:
+        source: ${{ github.event.inputs.path }}
+        target: "test-a.txt"
