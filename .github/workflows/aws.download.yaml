@@ -1,0 +1,36 @@
+name: Download from aws
+
+on: 
+  workflow_dispatch:
+    inputs:
+      bucket:
+        description: 'bucket name'
+        required: true
+        default: 'gg-dev-eu-north-1-clientbuilld-artefacts'
+        type: choice
+        options:
+          - gg-dev-eu-north-1-clientbuilld-artefacts
+jobs:
+  runscript:
+    name: Download test
+    runs-on: ubuntu-latest
+    env:
+      BuildFile: 'https://gg-dev-eu-north-1-clientbuilld-artefacts.s3.eu-north-1.amazonaws.com/artefacts/Android-5088552195.apk'
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: suisei-cn/actions-download-file@v1.4.0
+        id: downloadfile  # Remember to give an ID if you need the output
+        name: Download the file
+        with:
+          url: $BuildFile
+          target: public/
+          auto-match: true
+          retry-times: 3
+
+      - name: Generate summary
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY 
+          echo "${{ steps.downloadfile.outputs.filename }}" >> $GITHUB_STEP_SUMMARY 
+
+  
