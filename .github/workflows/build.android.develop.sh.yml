@@ -102,7 +102,7 @@ jobs:
         run: echo "Bramch=${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
 
       - name: Set output
-        run: echo "${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
+        run: echo "Bramch=${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
 
       - uses: actions/setup-dotnet@v1
         with:
