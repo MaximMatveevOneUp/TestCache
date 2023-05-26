@@ -98,9 +98,11 @@ jobs:
           BUILD_PRESET=${{ github.event.inputs.buildSettingsPreset }}
           echo "buildSettingsPreset=${BUILD_PRESET:-"Develop"}" >> $GITHUB_ENV 
 
-      - name: Print ref output
-        run: echo ::set-output name=branch::${{ env.CI_REF_NAME }}   
+      - name: Save state
+        run: echo "${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
 
+      - name: Set output
+        run: echo "${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.0.x'
