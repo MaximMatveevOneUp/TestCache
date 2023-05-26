@@ -96,7 +96,10 @@ jobs:
           echo "androidAppBundle=${APP_BUNDLE:-"false"}"  >> $GITHUB_ENV
           echo "CACHE_FOLDER_PATH=/Users/maxim.m/Runner/Cache/"  >> $GITHUB_ENV
           BUILD_PRESET=${{ github.event.inputs.buildSettingsPreset }}
-          echo "buildSettingsPreset=${BUILD_PRESET:-"Develop"}" >> $GITHUB_ENV          
+          echo "buildSettingsPreset=${BUILD_PRESET:-"Develop"}" >> $GITHUB_ENV 
+
+      - name: Print ref output
+        run: echo ::set-output name=branch::${{ env.CI_REF_NAME }}   
 
       - uses: actions/setup-dotnet@v1
         with:
