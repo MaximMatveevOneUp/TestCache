@@ -22,9 +22,9 @@ jobs:
         id: downloadfile  # Remember to give an ID if you need the output
         name: Download the file
         with:
-          url: 'https://placebear.com/g/200/200'
+          url: 'https://gg-dev-eu-north-1-clientbuilld-artefacts.s3.eu-north-1.amazonaws.com/artefacts/Android-5088552195.apk'
           target: public/
-          auto-match: true
+          auto-match: false
           retry-times: 3
 
       - name: Generate summary
