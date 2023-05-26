@@ -99,10 +99,11 @@ jobs:
           echo "buildSettingsPreset=${BUILD_PRESET:-"Develop"}" >> $GITHUB_ENV 
 
       - name: Save state
-        run: echo "${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
+        run: echo "Bramch=${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
 
       - name: Set output
         run: echo "${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
+
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.0.x'
