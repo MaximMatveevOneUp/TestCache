@@ -27,6 +27,12 @@ jobs:
           auto-match: false
           retry-times: 3
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: "Android-${{ github.run_id }}"
+          if-no-files-found: ignore
+          path: '${{ steps.downloadfile.outputs.filename }}'
+
       - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
