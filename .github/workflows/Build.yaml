@@ -24,7 +24,7 @@ jobs:
       if: ${{ github.event.inputs.upload }} == 'true'
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        event-type: my-event
+        event-type: Deploy to Firebase
         client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "runId": "${{ github.event.inputs.runId }}", "upload": "${{ github.event.inputs.upload }}"}'
 
     - name: Generate summary
