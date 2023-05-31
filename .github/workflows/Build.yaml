@@ -25,9 +25,10 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         event-type: Deploy to Firebase
-        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "runId": "${{ github.event.inputs.runId }}", "upload": "${{ github.event.inputs.upload }}"}'
+        client-payload: '{"branch": "${{ github.ref_name }}" "ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "runId": "${{ github.event.inputs.runId }}", "upload": "${{ github.event.inputs.upload }}"}'
 
     - name: Generate summary
       run: |
         echo "" >> $GITHUB_STEP_SUMMARY 
         echo "Branch: ${GITHUB_REF_NAME}" >> $GITHUB_STEP_SUMMARY
+        echo "Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY

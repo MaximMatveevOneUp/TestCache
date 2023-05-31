@@ -24,3 +24,4 @@ jobs:
         echo "${{ github.event.client_payload.sha }}" >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.client_payload.runId }}" >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.client_payload.upload }}" >> $GITHUB_STEP_SUMMARY
+        echo "${{ github.event.client_payload.branch }}" >> $GITHUB_STEP_SUMMARY
