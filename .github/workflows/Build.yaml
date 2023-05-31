@@ -20,6 +20,7 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Repository Dispatch
+      if: ${{ github.event.inputs.upload }} == 'true'
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
