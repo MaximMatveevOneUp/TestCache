@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     name: Upload
+    if: github.event.workflow_run.inputs.upload
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
