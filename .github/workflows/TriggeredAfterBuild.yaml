@@ -1,15 +1,17 @@
-name: Build
+name: Triggered After Build
 on:
-  workflow_dispatch:
-    inputs:
-      runId:
-        description: 'RunId'
-        required: true
-        default: ''
+  workflow_run:
+    workflows:
+      - Build
+    branches:
+      - develop
+    types:
+      - completed
+
 
 jobs:
   build:
-    name: Build
+    name: Upload
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
