@@ -3,13 +3,11 @@ name: Download from aws
 on: 
   workflow_dispatch:
     inputs:
-      bucket:
-        description: 'bucket name'
+      runId:
+        description: 'RunId'
         required: true
-        default: 'gg-dev-eu-north-1-clientbuilld-artefacts'
-        type: choice
-        options:
-          - gg-dev-eu-north-1-clientbuilld-artefacts
+        default: ''
+
 jobs:
   runscript:
     name: Download test
@@ -18,20 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: suisei-cn/actions-download-file@v1.4.0
-        id: downloadfile  # Remember to give an ID if you need the output
-        name: Download the file
+      - uses: octokit/request-action@v2.x
+        id: get_latest_release
         with:
-          url: 'https://gg-dev-eu-north-1-clientbuilld-artefacts.s3.eu-north-1.amazonaws.com/artefacts/Android-5088552195.apk'
-          target: public/
-          auto-match: false
-          retry-times: 3
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: "Android-${{ github.run_id }}"
-          if-no-files-found: ignore
-          path: '${{ steps.downloadfile.outputs.filename }}'
+          route: GET /repos/MaximMatveevOneUp/TestCache/actions/runs/${{ github.event.inputs.runId }}
+          owner: octokit
+          repo: request-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - run: "echo latest release: '${{ steps.get_latest_release.outputs.data }}'"
 
       - name: Generate summary
         run: |
