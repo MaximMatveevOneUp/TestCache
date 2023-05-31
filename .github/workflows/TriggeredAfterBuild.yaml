@@ -1,8 +1,13 @@
 name: Triggered After Build
 on:
-  workflow_job:
+  workflow_run:
+    workflows:
+      - Build
+    branches:
+      - develop
     types:
       - completed
+
 
 jobs:
   build:
