@@ -1,0 +1,24 @@
+name: Build
+on:
+  workflow_dispatch:
+    inputs:
+      source_path:
+        description: 'Path to source file'
+        required: true
+        default: 'test_fule.txt'
+      dest_path:
+        description: 'Path to dest file'
+        required: true
+        default: 'test_fule.txt'
+
+jobs:
+  copyfile:
+    name: Copy license
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Generate summary
+      run: |
+        echo "" >> $GITHUB_STEP_SUMMARY 
+        echo "Branch: ${GITHUB_REF_NAME}" >> $GITHUB_STEP_SUMMARY

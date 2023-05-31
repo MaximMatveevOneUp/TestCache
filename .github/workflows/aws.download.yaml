@@ -12,21 +12,11 @@ jobs:
   runscript:
     name: Download test
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           lfs: true      
-      - uses: octokit/request-action@v2.1.0
-        id: get_latest_release
-        with:
-          route: GET /repos/MaximMatveevOneUp/TestCache/actions/runs/${{ github.event.inputs.runId }}
-          owner: octokit
-          repo: request-action
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        - run: "echo latest release: '${{ steps.get_latest_release.outputs.data }}'"
 
       - name: Generate summary
         run: |
