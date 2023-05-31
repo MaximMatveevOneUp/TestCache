@@ -19,9 +19,9 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
-    - name: Repository Dispatch
-      if: ${{ github.event.inputs.upload }} == 'true'
+    - name: Repository Dispatch      
       uses: peter-evans/repository-dispatch@v2
+      if: ${{ github.event.inputs.upload }} == 'true'
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         event-type: my-event
