@@ -21,4 +21,5 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY 
         echo "Branch: ${GITHUB_REF_NAME}" >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.workflow_run.conclusion }}" >> $GITHUB_STEP_SUMMARY
+        echo "${{ github.event.workflow_run.id }}" >> $GITHUB_STEP_SUMMARY        
         echo "${{ github.event.inputs.upload }}" >> $GITHUB_STEP_SUMMARY
