@@ -20,4 +20,4 @@ jobs:
       run: |
         echo "" >> $GITHUB_STEP_SUMMARY 
         echo "Branch: ${GITHUB_REF_NAME}" >> $GITHUB_STEP_SUMMARY
-        echo "${{ github.event.workflow_run.conclusion}}"
+        echo "${{ github.event.workflow_run.conclusion}}" >> $GITHUB_STEP_SUMMARY
