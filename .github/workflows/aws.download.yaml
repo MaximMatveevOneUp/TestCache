@@ -37,5 +37,7 @@ jobs:
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY 
           echo "${{ steps.downloadfile.outputs.filename }}" >> $GITHUB_STEP_SUMMARY 
+          echo "${{ GITHUB_REF_NAME }}" >> $GITHUB_STEP_SUMMARY 
+          
 
   
