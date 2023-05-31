@@ -1,12 +1,7 @@
 name: Triggered After Build
 on:
-  workflow_run:
-    workflows:
-      - Build
-    branches:
-      - develop
-    types:
-      - completed
+  repository_dispatch:
+    types: [my-event]
 
 
 jobs:
@@ -23,6 +18,9 @@ jobs:
         echo "${{ github.event.workflow_run.conclusion }}" >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.workflow_run.id }}" >> $GITHUB_STEP_SUMMARY        
         echo "${{ github.event.workflow_run.head_sha }}" >> $GITHUB_STEP_SUMMARY                
-        echo "${{ github.event.workflow_run.head_branch}}"
-        echo "${{ github.event.workflow_run.event}}"        
+        echo "${{ github.event.workflow_run.head_branch}}" >> $GITHUB_STEP_SUMMARY
+        echo "${{ github.event.workflow_run.event}}" >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.inputs.upload }}" >> $GITHUB_STEP_SUMMARY
+        echo "${{ github.event.client_payload.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "${{ github.event.client_payload.runId }}" >> $GITHUB_STEP_SUMMARY
+        echo "${{ github.event.client_payload.upload }}" >> $GITHUB_STEP_SUMMARY
