@@ -1,0 +1,264 @@
+name: Build iOS Develop (Self-Hosted Local)
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      standName:
+        description: 'Stand by default'
+        required: true
+        default: 'CST1'
+        type: choice
+        options:
+          - RELEASE
+          - STAGE
+          - SST1
+          - CST1
+          - QST1
+          - PST1
+      testersGroups:
+        description: 'Testers Groups'
+        required: true
+        default: 'oneup-games'
+      firebaseUpload:
+        description: 'Upload build to Firebase'
+        required: true
+        default: true
+        type: boolean          
+      buildWithDeepProfilingSupport:
+        description: 'Deep Profiling Support'
+        required: true
+        default: false
+        type: boolean
+      restoreCache:
+        description: 'Restore Cache'
+        required: false
+        default: true
+        type: boolean
+      saveCache:
+        description: 'Save Cache'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  export:
+    name: Export XCode project
+    runs-on: [ self-hosted,Linux,unity ]
+    outputs:
+      buildNumber: ${{ steps.buildnumber.outputs.build_number }}
+    steps:
+      - name: Generate build number
+        id: buildnumber
+        uses: onyxmueller/build-tag-number@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: client
+
+      - name: GitHub Environment Variables Action
+        uses: FranzDiebold/github-env-vars-action@v2.7.0
+
+      - name: Generate summary
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "Build number: ${{ steps.buildnumber.outputs.build_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY      
+          echo "Stand Name: ${{ github.event.inputs.standName }}" >> $GITHUB_STEP_SUMMARY             
+          echo "Build With Deep Profiling Support: ${{ github.event.inputs.buildWithDeepProfilingSupport }}" >> $GITHUB_STEP_SUMMARY             
+          echo "Restore Cache: ${{ github.event.inputs.restoreCache }}" >> $GITHUB_STEP_SUMMARY  
+          echo "Save Cache: ${{ github.event.inputs.saveCache }}" >> $GITHUB_STEP_SUMMARY             
+
+      - name: Set values
+        id: values
+        run: |
+          DPS=${{ github.event.inputs.buildWithDeepProfilingSupport }}
+          echo "buildWithDeepProfilingSupport=${DPS:-"false"}" >> $GITHUB_ENV
+          CACHE_RESTORE=${{ github.event.inputs.restoreCache }}
+          echo "restoreCache=${CACHE_RESTORE:-"false"}" >> $GITHUB_ENV
+          CACHE_SAVE=${{ github.event.inputs.saveCache }}
+          echo "saveCache=${CACHE_SAVE:-"true"}" >> $GITHUB_ENV
+          STAND=${{ github.event.inputs.standName }}
+          echo "standName=${STAND:-"CST1"}" >> $GITHUB_ENV
+          echo "CACHE_FOLDER_PATH=$SHARED_BUILD_FOLDER_PATH/cache/ios/"  >> $GITHUB_ENV
+          
+      - name: Print exchange folder path
+        run: |
+          echo "Exchange folder: $SHARED_BUILD_FOLDER_PATH/${{ github.run_id }}"          
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore Unity Library from Cache
+        uses: one-up-games/github-action-cache-local-fs/restore@main
+        ## https://oneupgamesgroup.slack.com/archives/C024NHCRVS9/p1681727489220929
+        if: env.restoreCache == 'true'        
+        with:
+          cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
+          path: GGClient/Library
+          key: ios-${{ env.CI_REF_NAME_SLUG }}
+          restore-keys: |
+            ios-develop
+            ios-
+
+      - name: Update embedded catalog manifest
+        run: |
+          dotnet build Meta/Utils-Manifestor 
+          dotnet Meta/Utils-Manifestor/bin/Debug/net6.0/Utils-Manifestor.dll manifest -r GGClient/Assets/StreamingAssets/Embedded/CATALOG -d GGClient/Assets/StreamingAssets/Embedded/CATALOG/manifest.json
+
+      - name: Setup
+        uses: one-up-games/unity-builder@BuildResultFix
+        env:
+          acceleratorAddress: ${{ vars.ACCELERATOR_ADDRESS }}
+        with:
+          unityLicensingServer: ${{ vars.UNITY_LICENSE_SERVER_ADDRESS }}          
+          versioning: None
+          projectPath: GGClient
+          targetPlatform: iOS
+          customParameters: -EnableCacheServer -cacheServerEndpoint ${{ env.acceleratorAddress }} -cacheServerEnableDownload true -cacheServerEnableUpload false -buildSettingsPreset Develop
+          #.apk file extension will be added automatically  
+          buildMethod: Code.GGClient.Build.Editor.Builder.ApplySettings
+          allowDirtyBuild: true
+
+      - name: Build iOS
+        uses: one-up-games/unity-builder@BuildResultFix
+        env:
+          acceleratorAddress: ${{ vars.ACCELERATOR_ADDRESS }}
+        with:
+          unityLicensingServer: ${{ vars.UNITY_LICENSE_SERVER_ADDRESS }}          
+          versioning: None
+          projectPath: GGClient
+          targetPlatform: iOS
+          customParameters: -development true -allowDebugging false -buildWithDeepProfilingSupport ${{ env.buildWithDeepProfilingSupport }} -EnableCacheServer -cacheServerEndpoint ${{ env.acceleratorAddress }} -cacheServerEnableDownload true -cacheServerEnableUpload false -buildNumber ${{ steps.buildnumber.outputs.build_number }} -standName ${{ env.standName }}
+          buildName: XCodeProject
+          buildMethod: Code.GGClient.Build.Editor.Builder.Build
+          allowDirtyBuild: true
+
+      - name: Save Unity Library to Cache
+        uses: one-up-games/github-action-cache-local-fs/save@main
+        ## https://oneupgamesgroup.slack.com/archives/C024NHCRVS9/p1681727489220929
+        if: env.saveCache == 'true'
+        with:
+          cache-base-path: ${{ env.CACHE_FOLDER_PATH }}
+          path: GGClient/Library
+          key: ios-${{ env.CI_REF_NAME_SLUG }}
+
+      - name: Export XCode project to shared folder
+        run: cp -R ./build/iOS/XCodeProject $SHARED_BUILD_FOLDER_PATH/${{ github.run_id }}
+  
+  build:
+    needs: export
+    name: Build XCode project
+    runs-on: [ self-hosted, macOS ]
+    steps:
+      - name: Set values
+        id: values
+        run: |
+          FIREBASE_UPLOAD=${{ github.event.inputs.firebaseUpload }}
+          echo "firebaseUpload=${FIREBASE_UPLOAD:-"false"}" >> $GITHUB_ENV
+
+      - name: Print exchange folder path
+        run: |
+          echo "Exchange folder: $SHARED_BUILD_FOLDER_PATH/${{ github.run_id }}"
+          ls -la $SHARED_BUILD_FOLDER_PATH
+
+      - name: Unlock Keychain
+        run: |
+          security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" "$HOME/Library/Keychains/login.keychain"
+
+      - name: Import XCode project from shared folder
+        run: cp -vR $SHARED_BUILD_FOLDER_PATH/${{ github.run_id }}/* ./
+
+      - name: Run lane "build_and_export"
+        uses: maierj/fastlane-action@v3.0.0
+        with:
+          lane: "ios build_and_export"
+          options: '{ "buildNumber" : "${{ needs.export.outputs.buildNumber }}" }'
+          verbose: true
+        env:
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          LC_ALL: en_US.UTF-8
+          LANG: en_US.UTF-8
+
+      - name: Export ipa to shared folder
+        if: env.firebaseUpload == 'true'
+        run: cp -R builds/ggclient.dev.ipa $SHARED_BUILD_FOLDER_PATH/${{ github.run_id }}.ipa
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.GG_EU_NORTH_1_DEV_DEPLOY_USER_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.GG_EU_NORTH_1_DEV_DEPLOY_USER_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+
+      - name: Upload DEV build to aws
+        run: |
+          aws s3 cp builds/ggclient.dev.ipa s3://${{ vars.CLIENT_BUILD_ARTEFACTS_AWS_BUCKET }}/artefacts/ios-${{ github.run_id }}.dev.ipa \
+            --region eu-north-1 $*
+      
+      - name: Upload STORE build to aws
+        run: |
+          aws s3 cp builds/ggclient.store.ipa s3://${{ vars.CLIENT_BUILD_ARTEFACTS_AWS_BUCKET }}/artefacts/ios-${{ github.run_id }}.store.ipa \
+            --region eu-north-1 $*
+
+      - name: Generate summary
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href="https://${{ vars.CLIENT_BUILD_ARTEFACTS_AWS_BUCKET }}.s3.eu-north-1.amazonaws.com/artefacts/ios-${{ github.run_id }}.dev.ipa">Private aws download link DEV</a>" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href="https://${{ vars.CLIENT_BUILD_ARTEFACTS_AWS_BUCKET }}.s3.eu-north-1.amazonaws.com/artefacts/ios-${{ github.run_id }}.store.ipa">Private aws download link STORE</a>" >> $GITHUB_STEP_SUMMARY 
+
+  export:
+    needs: build
+    if: env.firebaseUpload == 'true'
+    name: Export XCode project
+    runs-on: [ self-hosted,Linux,unity ]
+
+      - name: Set values
+        id: values
+        run: |
+          FIREBASE_UPLOAD=${{ github.event.inputs.firebaseUpload }}
+          echo "firebaseUpload=${FIREBASE_UPLOAD:-"false"}" >> $GITHUB_ENV
+
+      - name: Firebase App Distribution
+        id: firebase_upload
+        if: env.firebaseUpload == 'true'
+        uses: MaximMatveevOneUp/Firebase-Distribution-Github-Action@master
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
+          groups: ${{ github.event.inputs.testersGroups }}
+          file: $SHARED_BUILD_FOLDER_PATH/${{ github.run_id }}.ipa
+          releaseNotes: 'Build number: ${{ steps.buildnumber.outputs.build_number }}\nStand Name: ${{ github.event.inputs.standName }}\nBranch: ${{ github.ref_name }}\nCommit sha: ${{ github.sha }}\nBuild: Develop'
+
+      - uses: snow-actions/qrcode@v1.0.0
+        if: env.firebaseUpload == 'true'
+        with:
+          text: ${{ steps.firebase_upload.outputs.share_url }}
+          path: 'qrcode_${{ github.run_id }}.png'
+
+      - name: Upload qr code to aws
+        if: env.firebaseUpload == 'true'
+        uses: one-up-games/action-aws-upload@v1
+        env:
+          AWS_S3_BUCKET: ${{ vars.PUBLIC_ARTEFACTS_AWS_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.OPS_EU_NORTH_1_PROD_DEPLOY_USER_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.OPS_EU_NORTH_1_PROD_DEPLOY_USER_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'eu-north-1'
+          AWS_S3_PATH: '/qr_codes/qrcode_${{ github.run_id }}.png'
+          FILE: 'qrcode_${{ github.run_id }}.png'
+
+      - name: Generate summary
+        if: env.firebaseUpload == 'true'
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href='${{ steps.firebase_upload.outputs.release_url }}'>Firebase release page</a>" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href='${{ steps.firebase_upload.outputs.share_url }}'>Share release </a>" >> $GITHUB_STEP_SUMMARY 
+          echo "<a href='${{ steps.firebase_upload.outputs.share_url }}'><img src="https://ops-dev-builds-public-artefacts.s3.eu-north-1.amazonaws.com/qr_codes/qrcode_${{ github.run_id }}.png"></a>" >> $GITHUB_STEP_SUMMARY     
+
