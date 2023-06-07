@@ -214,12 +214,12 @@ jobs:
           echo "<a href="https://${{ vars.CLIENT_BUILD_ARTEFACTS_AWS_BUCKET }}.s3.eu-north-1.amazonaws.com/artefacts/ios-${{ github.run_id }}.dev.ipa">Private aws download link DEV</a>" >> $GITHUB_STEP_SUMMARY 
           echo "<a href="https://${{ vars.CLIENT_BUILD_ARTEFACTS_AWS_BUCKET }}.s3.eu-north-1.amazonaws.com/artefacts/ios-${{ github.run_id }}.store.ipa">Private aws download link STORE</a>" >> $GITHUB_STEP_SUMMARY 
 
-  export:
+  firebaseUpload:
     needs: build
     if: env.firebaseUpload == 'true'
-    name: Export XCode project
+    name: Upload to firebase
     runs-on: [ self-hosted,Linux,unity ]
-
+    steps:
       - name: Set values
         id: values
         run: |
