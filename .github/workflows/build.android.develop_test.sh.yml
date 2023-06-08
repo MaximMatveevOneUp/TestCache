@@ -78,7 +78,7 @@ jobs:
           echo "standName=${{ github.event.inputs.standName || 'CST1'}}" >> $GITHUB_ENV
           echo "androidExportType=${{ github.event.inputs.androidExportType || 'androidPackage'}}" >> $GITHUB_ENV
           echo "developmentBuild=${{ github.event.inputs.developmentBuild || true }}" >> $GITHUB_ENV
-          echo "allowDebugging=${{ github.event.inputs.allowDebugging || false }}"
+          echo "allowDebugging=${{ github.event.inputs.allowDebugging || false }}" >> $GITHUB_ENV
           echo "CACHE_FOLDER_PATH=$SHARED_BUILD_FOLDER_PATH/cache/android/"  >> $GITHUB_ENV        
 
       - name: Generate summary
