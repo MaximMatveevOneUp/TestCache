@@ -83,6 +83,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           echo "branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY      
           echo "developmentBuild: ${{ github.event.inputs.developmentBuild }}" >> $GITHUB_STEP_SUMMARY
+          echo "saveCache: ${{ env.saveCache }}" >> $GITHUB_STEP_SUMMARY       
+          echo "standName=${{ env.standName }}" >> $GITHUB_STEP_SUMMARY
+          echo "androidExportType=${{ env.androidExportType || androidPackage}}"  >> $GITHUB_STEP_SUMMARY
           echo "allowDebugging: ${{ github.event.inputs.allowDebugging }}" >> $GITHUB_STEP_SUMMARY          
 
       - name: Save state
