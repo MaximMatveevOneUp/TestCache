@@ -75,8 +75,8 @@ jobs:
           echo "buildWithDeepProfilingSupport=${{ github.event.inputs.buildWithDeepProfilingSupport || false }}" >> $GITHUB_ENV
           echo "restoreCache=${{ github.event.inputs.restoreCache || false}}" >> $GITHUB_ENV
           echo "saveCache=${{ github.event.inputs.saveCache || true}}" >> $GITHUB_ENV
-          echo "standName=${{ github.event.inputs.standName || CST1}}" >> $GITHUB_ENV
-          echo "androidExportType=${{ github.event.inputs.androidExportType || androidPackage}}"  >> $GITHUB_ENV
+          echo "standName=${{ github.event.inputs.standName || 'CST1'}}" >> $GITHUB_ENV
+          echo "androidExportType=${{ github.event.inputs.androidExportType || 'androidPackage'}}"  >> $GITHUB_ENV
           echo "CACHE_FOLDER_PATH=$SHARED_BUILD_FOLDER_PATH/cache/android/"  >> $GITHUB_ENV        
 
       - name: Generate summary
