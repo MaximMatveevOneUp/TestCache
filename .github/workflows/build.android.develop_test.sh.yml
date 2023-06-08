@@ -76,18 +76,20 @@ jobs:
           echo "restoreCache=${{ github.event.inputs.restoreCache || false}}" >> $GITHUB_ENV
           echo "saveCache=${{ github.event.inputs.saveCache || true}}" >> $GITHUB_ENV
           echo "standName=${{ github.event.inputs.standName || 'CST1'}}" >> $GITHUB_ENV
-          echo "androidExportType=${{ github.event.inputs.androidExportType || 'androidPackage'}}"  >> $GITHUB_ENV
+          echo "androidExportType=${{ github.event.inputs.androidExportType || 'androidPackage'}}" >> $GITHUB_ENV
+          echo "developmentBuild=${{ github.event.inputs.developmentBuild || true }}" >> $GITHUB_ENV
+          echo "allowDebugging=${{ github.event.inputs.allowDebugging || false }}"
           echo "CACHE_FOLDER_PATH=$SHARED_BUILD_FOLDER_PATH/cache/android/"  >> $GITHUB_ENV        
 
       - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           echo "branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY      
-          echo "developmentBuild: ${{ github.event.inputs.developmentBuild }}" >> $GITHUB_STEP_SUMMARY
+          echo "developmentBuild: ${{ env.developmentBuild }}" >> $GITHUB_STEP_SUMMARY
           echo "saveCache: ${{ env.saveCache }}" >> $GITHUB_STEP_SUMMARY       
           echo "standName=${{ env.standName }}" >> $GITHUB_STEP_SUMMARY
           echo "androidExportType=${{ env.androidExportType }}"  >> $GITHUB_STEP_SUMMARY
-          echo "allowDebugging: ${{ github.event.inputs.allowDebugging }}" >> $GITHUB_STEP_SUMMARY          
+          echo "allowDebugging: ${{ env.allowDebugging }}" >> $GITHUB_STEP_SUMMARY          
 
       - name: Save state
         run: echo "Bramch=${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
