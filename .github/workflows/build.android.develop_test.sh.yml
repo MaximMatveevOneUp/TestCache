@@ -2,7 +2,7 @@ name: Build Android Develop test (Self-Hosted)
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron:  '*/1 * * * *' 
   workflow_dispatch:
     inputs:
       standName:
@@ -68,35 +68,12 @@ jobs:
       - name: GitHub Environment Variables Action
         uses: FranzDiebold/github-env-vars-action@v2.7.0
 
-      - name: Generate list using Markdown
+      - name: Generate summary
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "branch: ${{ env.CI_REF_NAME }}" >> $GITHUB_STEP_SUMMARY      
+          echo "branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY      
           echo "developmentBuild: ${{ github.event.inputs.developmentBuild }}" >> $GITHUB_STEP_SUMMARY
           echo "allowDebugging: ${{ github.event.inputs.allowDebugging }}" >> $GITHUB_STEP_SUMMARY          
-
-      - name: Set values
-        id: values
-        run: |
-          DEV_BUILD=${{ github.event.inputs.developmentBuild }}
-          echo "developmentBuild=${DEV_BUILD:-"true"}" >> $GITHUB_ENV
-          ALLOW_DEBUGGING=${{ github.event.inputs.allowDebugging }}
-          echo "allowDebugging=${ALLOW_DEBUGGING:-"false"}" >> $GITHUB_ENV
-          DPS=${{ github.event.inputs.buildWithDeepProfilingSupport }}
-          echo "buildWithDeepProfilingSupport=${DPS:-"false"}" >> $GITHUB_ENV
-          CACHE_RESTORE=${{ github.event.inputs.restoreCache }}
-          echo "restoreCache=${CACHE_RESTORE:-"false"}" >> $GITHUB_ENV
-          CACHE_SAVE=${{ github.event.inputs.saveCache }}
-          echo "saveCache=${CACHE_SAVE:-"false"}" >> $GITHUB_ENV
-          STAND=${{ github.event.inputs.standName }}
-          echo "standName=${STAND:-"CST1"}" >> $GITHUB_ENV
-          EXPORT_PROJECT=${{ github.event.inputs.exportProject }}
-          echo "exportProject=${EXPORT_PROJECT:-"false"}" >> $GITHUB_ENV
-          APP_BUNDLE=${{ github.event.inputs.androidAppBundle }}
-          echo "androidAppBundle=${APP_BUNDLE:-"false"}"  >> $GITHUB_ENV
-          echo "CACHE_FOLDER_PATH=/Users/maxim.m/Runner/Cache/"  >> $GITHUB_ENV
-          BUILD_PRESET=${{ github.event.inputs.buildSettingsPreset }}
-          echo "buildSettingsPreset=${BUILD_PRESET:-"Develop"}" >> $GITHUB_ENV 
 
       - name: Save state
         run: echo "Bramch=${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
