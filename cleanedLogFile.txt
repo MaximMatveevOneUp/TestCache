@@ -19,18 +19,3 @@ Assets/Code/External/Meta-Shared/Sources is a symbolic link. Using symlinks in U
 Assets/Code/External/Meta-Definitions/Sources is a symbolic link. Using symlinks in Unity projects may cause your project to become corrupted if you create multiple references to the same asset, use recursive symlinks or use symlinks to share assets between projects used with different versions of Unity. Make sure you know what you are doing.
 
 Assets/Code/External/Utils-Client/Sources is a symbolic link. Using symlinks in Unity projects may cause your project to become corrupted if you create multiple references to the same asset, use recursive symlinks or use symlinks to share assets between projects used with different versions of Unity. Make sure you know what you are doing.
-
-Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
-
-Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
-
-Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
-
-Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
-
-Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
-
-Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
-
-Scripts have compiler errors.
-
