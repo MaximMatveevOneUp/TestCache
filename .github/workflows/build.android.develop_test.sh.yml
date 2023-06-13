@@ -94,6 +94,7 @@ jobs:
       - name: Save state
         run: |
           echo "Branch=${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
+          ls
           grep "error" cleanedLogFile.txt >> $GITHUB_STEP_SUMMARY 
 
       - name: Set output
