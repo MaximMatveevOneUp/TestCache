@@ -92,7 +92,7 @@ jobs:
           echo "allowDebugging: ${{ env.allowDebugging }}" >> $GITHUB_STEP_SUMMARY          
 
       - name: Save state
-        run: |
+        run:
           echo "Branch=${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
           grep "error" cleanedLogFile.txt >> $GITHUB_STEP_SUMMARY
           exit 0
