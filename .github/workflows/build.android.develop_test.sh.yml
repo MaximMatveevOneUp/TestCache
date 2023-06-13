@@ -93,7 +93,8 @@ jobs:
 
       - name: Save state
         uses: MaximMatveevOneUp/errors_from_logs@main
-        logFile: cleanedLogFile.txt
+        with:
+          logFile: cleanedLogFile.txt
 
       - name: Set output
         run: echo "Branch=${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
