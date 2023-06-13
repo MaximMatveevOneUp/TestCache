@@ -96,7 +96,7 @@ jobs:
 
           result=$(grep "error" cleanedLogFile.txt)
           status=$?
-          if [$status -eq 0 ]; then
+          if [$status -eq 0 ];
             echo "$result" >> $GITHUB_STEP_SUMMARY
           fi
 
