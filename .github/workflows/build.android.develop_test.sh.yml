@@ -93,9 +93,12 @@ jobs:
 
       - name: Save state
         run:
-          echo "Branch=${{ env.CI_REF_NAME }}" >> $GITHUB_STATE
-          grep "error" cleanedLogFile.txt >> $GITHUB_STEP_SUMMARY
-          exit 0
+
+          result=$(grep "error" cleanedLogFile.txt)
+          status=$?
+          if [$status -eq 0 ]; then
+            echo "Build errors: $result" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Set output
         run: echo "Branch=${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
