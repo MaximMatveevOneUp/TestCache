@@ -92,13 +92,8 @@ jobs:
           echo "allowDebugging: ${{ env.allowDebugging }}" >> $GITHUB_STEP_SUMMARY          
 
       - name: Save state
-        run:
-
-          result=$(grep "error" cleanedLogFile.txt)
-          status=$?
-          if [$status -eq 0 ];
-            echo "$result" >> $GITHUB_STEP_SUMMARY
-          fi
+        uses: MaximMatveevOneUp/errors_from_logs@main
+        logFile: cleanedLogFile.txt
 
       - name: Set output
         run: echo "Branch=${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
