@@ -67,6 +67,8 @@ jobs:
       - name: GitHub Environment Variables Action
         uses: FranzDiebold/github-env-vars-action@v2.7.0
 
+      - uses: actions/checkout@v2
+
       - name: Set values
         id: values
         run: |
