@@ -91,20 +91,8 @@ jobs:
           echo "androidExportType=${{ env.androidExportType }}"  >> $GITHUB_STEP_SUMMARY
           echo "allowDebugging: ${{ env.allowDebugging }}" >> $GITHUB_STEP_SUMMARY          
 
-      - name: Save state
+      - name: Check build errors
         id: build_errors
         uses: MaximMatveevOneUp/errors_from_logs@main
         with:
           logFile: cleanedLogFile.txt
-
-      - name: Set output
-        run: |
-          echo "Errors: ${{ steps.build_errors.outputs.result }}" >> $GITHUB_STEP_SUMMARY
-
-      - name: Generate build errors summary
-        run: |
-          messgae='grep "error cs" cleanedLogFile.txt'
-          echo "messgae=${messgae}"
-
-      - name: Set output
-        run: echo "Branch=${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
