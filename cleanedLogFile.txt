@@ -22,5 +22,11 @@ Assets/Code/External/Utils-Client/Sources is a symbolic link. Using symlinks in 
 
 Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
 
+Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
+
+Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
+
+Assets/Code/GGClient/BuildPipeline/Editor/BuildErrorsLogger.cs(6,1): error CS0116: A namespace cannot directly contain members such as fields or methods
+
 Scripts have compiler errors.
 
