@@ -100,7 +100,7 @@ jobs:
       - name: Generate build errors summary
         run:
 
-          echo grep "error cs" cleanedLogFile.txt  >> $GITHUB_STEP_SUMMARY           
+          echo "$(grep "error cs" cleanedLogFile.txt)"  >> $GITHUB_STEP_SUMMARY           
 
 
       - name: Set output
