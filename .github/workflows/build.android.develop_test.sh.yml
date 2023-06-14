@@ -99,7 +99,8 @@ jobs:
 
       - name: Generate build errors summary
         run: |
-          grep "error cs" cleanedLogFile.txt
+          messgae='grep "error cs" cleanedLogFile.txt'
+          echo "messgae=${messgae}"
 
       - name: Set output
         run: echo "Branch=${{ env.CI_REF_NAME }}" >> $GITHUB_OUTPUT
