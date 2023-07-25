@@ -11,6 +11,9 @@ on:
         required: true
         default: false
         type: boolean
+      test:
+        description: environment
+        type: environment
 
 jobs:
   build:
