@@ -24,7 +24,7 @@ jobs:
     if: ${{ github.event.inputs.firebaseUpload }} == 'true'
     needs: copyfile
     name: Upload to firebase    
-    runs-on: [ self-hosted, Linux, unity ]
+    runs-on: ubuntu-latest
     steps:
       - name: Set values
         id: values
