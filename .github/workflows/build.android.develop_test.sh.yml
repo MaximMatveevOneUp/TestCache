@@ -1,7 +1,6 @@
 name: Build Android Develop test (Self-Hosted)
 
 on:
-  push:
   workflow_dispatch:
     inputs:
       standName:
