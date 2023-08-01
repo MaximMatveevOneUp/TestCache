@@ -2,19 +2,11 @@ name: Copy license
 on:
   workflow_dispatch:
     inputs:
-      source_path:
-        description: 'Path to source file'
-        required: true
-        default: 'test_fule.txt'
       firebaseUpload:
         description: 'Upload build to Firebase'
         required: true
         default: true
         type: boolean        
-      dest_path:
-        description: 'Path to dest file'
-        required: true
-        default: 'test_fule.txt'
 
 jobs:
   copyfile:
@@ -23,11 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
-    - name: Copy file
-      uses: canastro/copy-action@0.0.2
-      with:
-        source: ${{ github.event.inputs.path }}
-        target: "test-a.txt"
+    - name: Set values
+      id: values
+      run: |
+        echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV
         
   firebaseUpload:
     needs: copyfile
@@ -38,7 +29,4 @@ jobs:
       - name: Set values
         id: values
         run: |
-          echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV
-          echo "testersGroups=${{ github.event.inputs.testersGroups || 'oneup-games' }}" >> $GITHUB_ENV
-          echo "standName=${{ github.event.inputs.standName || 'CST1' }}" >> $GITHUB_ENV
-        
+          echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV        
