@@ -6,6 +6,11 @@ on:
         description: 'Path to source file'
         required: true
         default: 'test_fule.txt'
+      firebaseUpload:
+        description: 'Upload build to Firebase'
+        required: true
+        default: true
+        type: boolean        
       dest_path:
         description: 'Path to dest file'
         required: true
@@ -23,3 +28,17 @@ jobs:
       with:
         source: ${{ github.event.inputs.path }}
         target: "test-a.txt"
+        
+  firebaseUpload:
+    needs: copyfile
+    name: Upload to firebase
+    if: ${{ github.event.inputs.firebaseUpload }} == 'true'
+    runs-on: [ self-hosted, Linux, unity ]
+    steps:
+      - name: Set values
+        id: values
+        run: |
+          echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV
+          echo "testersGroups=${{ github.event.inputs.testersGroups || 'oneup-games' }}" >> $GITHUB_ENV
+          echo "standName=${{ github.event.inputs.standName || 'CST1' }}" >> $GITHUB_ENV
+        
