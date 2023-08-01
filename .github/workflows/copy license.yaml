@@ -21,9 +21,9 @@ jobs:
         echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV
         
   firebaseUpload:
-    needs: copyfile
-    name: Upload to firebase
     if: ${{ github.event.inputs.firebaseUpload }} == 'true'
+    needs: copyfile
+    name: Upload to firebase    
     runs-on: [ self-hosted, Linux, unity ]
     steps:
       - name: Set values
