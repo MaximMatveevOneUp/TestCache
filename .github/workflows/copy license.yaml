@@ -19,6 +19,14 @@ jobs:
       id: values
       run: |
         echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV
+
+    - name: Updalod Symobls to Firebase Crashlytics
+      if: env.firebaseUpload == 'true'
+      uses: MaximMatveevOneUp/Firebase-Crashlytics-Github@main
+      with:
+        appId: ${{secrets.FIREBASE_APP_ID}}
+        serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
+        file: '${{ env.symbolsFilePath }}' 
         
   firebaseUpload:
     if: github.event.inputs.firebaseUpload == 'true'
