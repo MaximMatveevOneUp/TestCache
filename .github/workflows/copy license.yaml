@@ -23,11 +23,3 @@ jobs:
         symbolsFile=$(find . -type f -name '*.symbols.zip')
         firebase crashlytics:symbols:upload --app=${{secrets.FIREBASE_APP_ID}} $symbolsFile
         
-
-    - name: Updalod Symobls to Firebase Crashlytics
-      if: env.firebaseUpload == 'true'
-      uses: MaximMatveevOneUp/Firebase-Crashlytics-Github@main
-      with:
-        appId: ${{secrets.FIREBASE_APP_ID}}
-        serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
-        file: '${{ env.symbolsFilePath }}' 
