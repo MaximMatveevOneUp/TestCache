@@ -17,6 +17,7 @@ jobs:
 
     - name: Install Firebase
       run: |        
+        apt-get update 
         sudo apt-get install openjdk-11-jdk
         curl -sL https://firebase.tools | bash
         symbolsFile='test'
