@@ -21,6 +21,5 @@ jobs:
         
     - name: Upload
       run: |
-        symbolsFile=$(find . -type f -name '*.symbols.zip')
-        export GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }} 
+        symbolsFile=$(find . -type f -name '*.symbols.zip')    
         firebase crashlytics:symbols:upload --app=${{secrets.FIREBASE_APP_ID}} $symbolsFile        
