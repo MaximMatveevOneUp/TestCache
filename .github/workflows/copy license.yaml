@@ -16,7 +16,6 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Install and upload
-      if: env.firebaseUpload == 'true'
       run: |
         curl -sL https://firebase.tools | bash
         export GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
