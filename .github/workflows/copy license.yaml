@@ -28,14 +28,3 @@ jobs:
         appId: ${{secrets.FIREBASE_APP_ID}}
         serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
         file: '${{ env.symbolsFilePath }}' 
-        
-  firebaseUpload:
-    if: github.event.inputs.firebaseUpload == 'true'
-    needs: copyfile
-    name: Upload to firebase    
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set values
-        id: values
-        run: |
-          echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV        
