@@ -17,7 +17,6 @@ jobs:
 
     - name: Install and upload
       run: |        
-        export GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}      
         curl -sL https://firebase.tools | bash
         firebase crashlytics:symbols:upload --app=${{secrets.FIREBASE_APP_ID}} $symbolsFile        
         
