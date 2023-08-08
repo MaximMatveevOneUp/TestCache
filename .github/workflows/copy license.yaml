@@ -19,7 +19,7 @@ jobs:
       id: values
       run: |
         echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV
-        ls /github/workspace/.crashlytics
+        ls /github/workspace
 
     - name: Updalod Symobls to Firebase Crashlytics
       if: env.firebaseUpload == 'true'
