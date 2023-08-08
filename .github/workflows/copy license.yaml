@@ -22,4 +22,4 @@ jobs:
     - name: Upload
       run: |
         symbolsFile=$(find . -type f -name '*.symbols.zip')    
-        firebase crashlytics:symbols:upload --app=${{secrets.FIREBASE_APP_ID}} $symbolsFile        
+        firebase crashlytics:symbols:upload --app=${{secrets.FIREBASE_APP_ID}} $symbolsFile         
