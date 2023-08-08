@@ -21,6 +21,11 @@ jobs:
         echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV
         ls /github/workspace
 
+    - name: Install and upload
+      if: env.firebaseUpload == 'true'
+      run: |
+        curl -sL https://firebase.tools | bash
+
     - name: Updalod Symobls to Firebase Crashlytics
       if: env.firebaseUpload == 'true'
       uses: MaximMatveevOneUp/Firebase-Crashlytics-Github@main
