@@ -18,7 +18,7 @@ jobs:
     - name: Install Firebase
       run: |        
         sudo apt-get update 
-        sudo apt-get install openjdk-11-jdk
+        sudo apt-get install openjdk-11-jdk -y
         curl -sL https://firebase.tools | bash
         symbolsFile='test'
         export GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}'
