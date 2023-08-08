@@ -15,12 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
-    - name: Set values
-      id: values
-      run: |
-        echo "firebaseUpload=${{ github.event.inputs.firebaseUpload || false }}" >> $GITHUB_ENV
-        ls /github/workspace
-
     - name: Install and upload
       if: env.firebaseUpload == 'true'
       run: |
